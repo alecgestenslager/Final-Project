@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -9,6 +8,7 @@ public class ChatGUI extends  JFrame {
 
     private String message;
     private PrintWriter pw;
+    private String title;
 
     /**
      * Creates new form GUI
@@ -17,8 +17,9 @@ public class ChatGUI extends  JFrame {
         initComponents();
     }
 
-    public ChatGUI(PrintWriter pw) {
+    public ChatGUI(PrintWriter pw, String title) {
         this.pw = pw;
+        this.title = title;
     }
 
     /**
@@ -35,8 +36,11 @@ public class ChatGUI extends  JFrame {
         jTextField1 = new  JTextField();
         sendButton = new  JButton();
         jLabel1 = new  JLabel();
+        jLabel1.setText(getTitle());
+        jLabel1.setVisible(true);
 
         setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         msgDisplay.setColumns(20);
         msgDisplay.setRows(5);
@@ -53,8 +57,6 @@ public class ChatGUI extends  JFrame {
         };
 
         sendButton.setText("Send");
-
-        jLabel1.setText(getTitle());
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,15 +98,20 @@ public class ChatGUI extends  JFrame {
     }
 
     private void sendButtonActionPerformed() {
-        String message = jTextField1.getText();
-        send(pw, message);
-//        jTextField1.setText("");
+        try {
+            String message = jTextField1.getText();
+            send(pw, message);
+            jTextField1.setText("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void send(PrintWriter pw, String msg) {
+    private void send(PrintWriter pw, String msg) throws IOException {
         try{
+//            pw = new PrintWriter(System.out);
             System.out.println("Message is: " + msg);
-            pw.print(msg);
+            pw.println(msg + "\n");
             System.out.println("Message written!");
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -165,5 +172,9 @@ public class ChatGUI extends  JFrame {
 
     public void setMsgDisplay(String prefix, String message) {
          msgDisplay.setText(msgDisplay.getText() + "\n" + prefix + ": " + message);
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
