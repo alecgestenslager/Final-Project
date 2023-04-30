@@ -6,7 +6,6 @@ import java.net.Socket;
 public class Server extends Thread {
 
     public static boolean isAlive;
-    public static ChatGUI serverWindow;
     public static String message;
 
     public void run() {
@@ -22,14 +21,12 @@ public class Server extends Thread {
             System.out.println("Server connected to " + socket.getLocalAddress() + ":" + socket.getPort());
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
-            serverWindow = new ChatGUI("Server");
-            serverWindow.setVisible(true);
-            serverWindow.startGUI(pw, "Server");
+
 
             while (!message.equals("quit")) {
                 message = br.readLine();
                 System.out.println("Server: message received from client!");
-                serverWindow.setMsgDisplay("Client", message);
+
             }
             pw.close();
         } catch (Exception e) {

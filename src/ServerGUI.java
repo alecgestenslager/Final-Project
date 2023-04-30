@@ -1,11 +1,16 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class ServerGUI extends JFrame {
-    private static PrintWriter pw;
-    private static String title = "";
+
+    static PrintWriter pwServer;
 
     public ServerGUI() {
 
@@ -40,7 +45,7 @@ public class ServerGUI extends JFrame {
         sendButton.setText("Send");
         sendButton.addActionListener(actionListener);
 
-        jLabel1.setText(title);
+        jLabel1.setText("Server");
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -77,26 +82,18 @@ public class ServerGUI extends JFrame {
 
     private void sendButtonActionPerformed() {
         String message = jTextField1.getText();
-        send(pw, message);
+        pwServer.println(message);
+        setMsgDisplay("Server", message);
         jTextField1.setText("");
     }
 
-    private void send(PrintWriter pw, String msg) {
-        pw.println(msg);
-        Server.serverWindow.setMsgDisplay("Client", Server.message);
-    }
-
-    public void setMsgDisplay(String prefix, String message) {
+    public static void setMsgDisplay(String prefix, String message) {
         msgDisplay.setText(msgDisplay.getText() + "\n" + prefix + ": " + message);
     }
 
 
 
-    public void startGUI(PrintWriter print, String t) {
-        pw = print;
-        title = t;
-        jScrollPane1.setVisible(true);
-
+    public static void serverInit() {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -110,13 +107,13 @@ public class ServerGUI extends JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChatGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChatGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChatGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ChatGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -127,6 +124,25 @@ public class ServerGUI extends JFrame {
                 new ServerGUI().setVisible(true);
             }
         });
+
+        try {
+            ServerSocket serverSocket = new ServerSocket(5555);
+            System.out.println("Server accepting connections...");
+            Socket socket = serverSocket.accept();
+            System.out.println("Server connected to " + socket.getLocalAddress() + ":" + socket.getPort());
+            BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            pwServer = new PrintWriter(socket.getOutputStream(), true);
+            String message = "";
+
+            while (true) {
+                message = br.readLine();
+                setMsgDisplay("Client", message);
+                System.out.println("Server: message received from client");
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Variables declaration - do not modify
