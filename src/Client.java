@@ -14,7 +14,11 @@ public class Client implements Runnable {
             gui.startGUI(); // Starts the GUI
             String message = "";
 
-            while (!message.equals("quit")) { // Reads in messages while the message is not "quit"
+            while (true) { // Reads in messages while the message is not "quit"
+                if (message.equals("quit")) {
+                    break;
+                }
+
                 message = br.readLine();
                 System.out.println("Client Message Received!");
                 gui.setMsgDisplay("Client", message);

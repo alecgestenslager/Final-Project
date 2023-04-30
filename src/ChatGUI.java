@@ -5,21 +5,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class ChatGUI extends  JFrame {
-
-    private String message;
     private PrintWriter pw;
-    private String title;
+    private String title = "";
 
     /**
      * Creates new form GUI
      */
-    public ChatGUI() {
-        initComponents();
-    }
-
     public ChatGUI(PrintWriter pw, String title) {
         this.pw = pw;
         this.title = title;
+    }
+
+    public ChatGUI() {
+        initComponents();
     }
 
     /**
@@ -57,6 +55,8 @@ public class ChatGUI extends  JFrame {
         };
 
         sendButton.setText("Send");
+
+        jLabel1.setText(title);
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,7 +109,8 @@ public class ChatGUI extends  JFrame {
 
     private void send(PrintWriter pw, String msg) throws IOException {
         try{
-//            pw = new PrintWriter(System.out);
+            System.out.println("Title: " + title);
+            pw = new PrintWriter(System.out);
             System.out.println("Message is: " + msg);
             pw.println(msg + "\n");
             System.out.println("Message written!");
@@ -162,19 +163,7 @@ public class ChatGUI extends  JFrame {
     private  JButton sendButton;
     // End of variables declaration
 
-    public String getMessage() {
-        return message;
-    }
-
-    public String getMsgDisplay() {
-        return msgDisplay.getText();
-    }
-
     public void setMsgDisplay(String prefix, String message) {
          msgDisplay.setText(msgDisplay.getText() + "\n" + prefix + ": " + message);
-    }
-
-    public String getTitle() {
-        return title;
     }
 }
