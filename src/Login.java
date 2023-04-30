@@ -94,7 +94,7 @@ public class Login extends JFrame {
             panel.setVisible(false);
             frame.setVisible(false);
             new Thread(new Server()).start();
-            new Thread(new Client()).start();
+//            new Thread(new Client()).start();
         } else {
             error.setVisible(true);
             username.setText("");

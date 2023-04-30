@@ -12,8 +12,8 @@ public class Server implements Runnable {
             System.out.println("Server connected to " + socket.getLocalAddress() + ":" + socket.getPort());
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
-            ChatGUI gui = new ChatGUI(pw, "Server");
-            gui.startGUI();
+            ChatGUI gui = new ChatGUI();
+            gui.startGUI(pw, "Server");
             String message = "";
 
             while (!message.equals("quit")) {
