@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.net.Socket;
 
 public class Login extends JFrame {
 
@@ -13,7 +14,10 @@ public class Login extends JFrame {
     static JPasswordField password;
     static JButton loginButton;
     static JLabel error;
-    public static void loginInit() {
+    static String errorText = "Server must log in first";
+    static Thread server;
+
+    public static void main(String[] args) {
 
         // Initializing JPanel
         panel = new JPanel();
@@ -79,7 +83,7 @@ public class Login extends JFrame {
         loginButton.addKeyListener(keyListener);
         panel.add(loginButton);
 
-        error = new JLabel("Server must log in first");
+        error = new JLabel(errorText);
         error.setBounds(177, 150, 145, 25);
         error.setForeground(Color.red);
         panel.add(error);
@@ -89,13 +93,28 @@ public class Login extends JFrame {
     }
 
     private static void login() {
-        if ((username.getText().equals("serverAdmin") && (password.getText().equals("serverAdminPassword") || password.getText().equals("bypass")))
-                || (username.getText().equals("clientAdmin") && (password.getText().equals("clientAdminPassword") || password.getText().equals("bypass")))) {
-            panel.setVisible(false);
-            frame.setVisible(false);
-            new Thread(new Server()).start();
-//            new Thread(new Client()).start();
+        if (Server.isAlive && (username.getText().equals("serverAdmin") && (password.getText().equals("serverAdminPassword") || password.getText().equals("bypass")))) {
+            username.setText("");
+            password.setText("");
+
+            error.setVisible(true);
+            error.setText("Server is already running");
+        } else if ((username.getText().equals("serverAdmin") && (password.getText().equals("serverAdminPassword") || password.getText().equals("bypass")))) {
+            username.setText("");
+            password.setText("");
+            Server.isAlive = true;
+            System.out.println(Thread.currentThread().getName() + " is running");
+        } else if ((username.getText().equals("clientAdmin") && (password.getText().equals("clientAdminPassword") || password.getText().equals("bypass")))) {
+            if (!Server.isAlive) {
+                error.setText(errorText);
+                error.setVisible(true);
+                username.setText("");
+                password.setText("");
+            } else {
+                frame.setVisible(false);
+            }
         } else {
+            error.setText("Invalid login");
             error.setVisible(true);
             username.setText("");
             password.setText("");

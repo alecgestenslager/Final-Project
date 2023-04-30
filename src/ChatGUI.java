@@ -4,22 +4,18 @@ import java.io.PrintWriter;
 import javax.swing.*;
 
 
-public class ChatGUI extends JFrame {
+public class ChatGUI extends JFrame implements Runnable {
 
     private static PrintWriter pw;
     private static String title = "";
 
-    public ChatGUI() {
-        initComponents();
+    public ChatGUI(String title) {
+
+        initComponents(title);
     }
 
-//    public ChatGUI(PrintWriter pw, String title) {
-//        this.pw = pw;
-//        this.title = title;
-//    }
 
-
-    private void initComponents() {
+    private void initComponents(String title) {
 
         jScrollPane1 = new JScrollPane();
         msgDisplay = new JTextArea();
@@ -88,11 +84,10 @@ public class ChatGUI extends JFrame {
     }
 
     private void send(PrintWriter pw, String msg) {
-        System.out.println("Title: " + title);
-//        pw = new PrintWriter(System.out);
         System.out.println("Message is: " + msg);
         pw.println(msg);
         System.out.println("Message written!");
+        setMsgDisplay(title, msg);
     }
 
     public void setMsgDisplay(String prefix, String message) {
@@ -101,9 +96,10 @@ public class ChatGUI extends JFrame {
 
 
 
-    public static void startGUI(PrintWriter print, String t) {
+    public void startGUI(PrintWriter print, String t) {
         pw = print;
         title = t;
+        jScrollPane1.setVisible(true);
 
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -132,16 +128,21 @@ public class ChatGUI extends JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChatGUI().setVisible(true);
+                new ChatGUI(t).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify
     private JLabel jLabel1;
-    private JScrollPane jScrollPane1;
+    private static JScrollPane jScrollPane1;
     private JTextField jTextField1;
     private static JTextArea msgDisplay;
     private JButton sendButton;
+
+    @Override
+    public void run() {
+
+    }
     // End of variables declaration
 }
