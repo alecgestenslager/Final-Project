@@ -1,21 +1,19 @@
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
-import javax.swing.*;
 
-
-public class ChatGUI extends JFrame implements Runnable {
-
+public class ServerGUI extends JFrame {
     private static PrintWriter pw;
     private static String title = "";
 
-    public ChatGUI(String title) {
+    public ServerGUI() {
 
-        initComponents(title);
+        initComponents();
     }
 
 
-    private void initComponents(String title) {
+    private void initComponents() {
 
         jScrollPane1 = new JScrollPane();
         msgDisplay = new JTextArea();
@@ -85,7 +83,6 @@ public class ChatGUI extends JFrame implements Runnable {
 
     private void send(PrintWriter pw, String msg) {
         pw.println(msg);
-        Client.clientWindow.setMsgDisplay("Server", Client.message);
         Server.serverWindow.setMsgDisplay("Client", Server.message);
     }
 
@@ -127,7 +124,7 @@ public class ChatGUI extends JFrame implements Runnable {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChatGUI(t).setVisible(true);
+                new ServerGUI().setVisible(true);
             }
         });
     }
@@ -138,10 +135,4 @@ public class ChatGUI extends JFrame implements Runnable {
     private JTextField jTextField1;
     private static JTextArea msgDisplay;
     private JButton sendButton;
-
-    @Override
-    public void run() {
-
-    }
-    // End of variables declaration
 }
