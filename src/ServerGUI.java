@@ -8,18 +8,19 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerGUI extends JFrame {
+public class ServerGUI extends JFrame implements Runnable {
 
     static PrintWriter pwServer;
+    static boolean isAlive = false;
 
-    public ServerGUI() {
-
-        initComponents();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new ServerGUI());
+        serverInit();
     }
 
 
     private void initComponents() {
-
+        setVisible(true);
         jScrollPane1 = new JScrollPane();
         msgDisplay = new JTextArea();
         jTextField1 = new JTextField();
@@ -119,11 +120,11 @@ public class ServerGUI extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ServerGUI().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ServerGUI().setVisible(true);
+//            }
+//        });
 
         try {
             ServerSocket serverSocket = new ServerSocket(5555);
@@ -151,4 +152,8 @@ public class ServerGUI extends JFrame {
     private JTextField jTextField1;
     private static JTextArea msgDisplay;
     private JButton sendButton;
+
+    public void run() {
+        initComponents();
+    }
 }

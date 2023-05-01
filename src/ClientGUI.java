@@ -9,17 +9,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class ClientGUI extends JFrame {
+public class ClientGUI extends JFrame implements Runnable {
 
     static PrintWriter pwClient;
-    public ClientGUI() {
 
-        initComponents();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new ClientGUI());
+        clientInit();
     }
 
 
     private void initComponents() {
-
+        setVisible(true);
         jScrollPane1 = new JScrollPane();
         msgDisplay = new JTextArea();
         jTextField1 = new JTextField();
@@ -119,11 +120,11 @@ public class ClientGUI extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ClientGUI().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ClientGUI().setVisible(true);
+//            }
+//        });
 
         try {
             Socket clientSocket = new Socket("localhost", 5555);
@@ -149,4 +150,8 @@ public class ClientGUI extends JFrame {
     private JTextField jTextField1;
     private static JTextArea msgDisplay;
     private JButton sendButton;
+
+    public void run() {
+        initComponents();
+    }
 }

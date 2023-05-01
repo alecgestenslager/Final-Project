@@ -93,19 +93,13 @@ public class Login extends JFrame {
     }
 
     private static void login() {
-        if (Server.isAlive && (username.getText().equals("serverAdmin") && (password.getText().equals("serverAdminPassword") || password.getText().equals("bypass")))) {
+        if ((username.getText().equals("serverAdmin") && (password.getText().equals("serverAdminPassword") || password.getText().equals("bypass")))) {
             username.setText("");
             password.setText("");
-
-            error.setVisible(true);
-            error.setText("Server is already running");
-        } else if ((username.getText().equals("serverAdmin") && (password.getText().equals("serverAdminPassword") || password.getText().equals("bypass")))) {
-            username.setText("");
-            password.setText("");
-            Server.isAlive = true;
+            ServerGUI.isAlive = true;
             System.out.println(Thread.currentThread().getName() + " is running");
         } else if ((username.getText().equals("clientAdmin") && (password.getText().equals("clientAdminPassword") || password.getText().equals("bypass")))) {
-            if (!Server.isAlive) {
+            if (!ServerGUI.isAlive) {
                 error.setText(errorText);
                 error.setVisible(true);
                 username.setText("");
